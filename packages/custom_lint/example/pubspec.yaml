@@ -11,7 +11,11 @@ dependencies:
 dev_dependencies:
   custom_lint:
   example_lint:
-    path: ./example_lint
+    # path: ./example_lint
+    git: 
+      url: git@github.com:TimWhiting/dart_custom_lint
+      path: packages/custom_lint/example/example_lint
+      ref: git_dependency_fix
 
 dependency_overrides:
   custom_lint:

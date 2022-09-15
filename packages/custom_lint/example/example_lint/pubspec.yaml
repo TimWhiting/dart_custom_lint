@@ -8,8 +8,14 @@ environment:
 dependencies:
   analyzer: ^4.0.0
   custom_lint_builder:
-    path: ../../../custom_lint_builder
+    git: 
+      url: git@github.com:TimWhiting/dart_custom_lint
+      path: packages/custom_lint_builder
+      ref: git_dependency_fix
 
 dependency_overrides:
   custom_lint:
-    path: ../../../custom_lint
+    git: 
+      url: git@github.com:TimWhiting/dart_custom_lint
+      path: packages/custom_lint
+      ref: git_dependency_fix

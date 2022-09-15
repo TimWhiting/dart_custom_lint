@@ -34,7 +34,7 @@ class RiverpodLint extends PluginBase {
         .toList();
 
     for (final provider in providers) {
-      if (provider.name == 'othe2') throw StateError('Nani?');
+      if (provider.name == 'other') throw StateError('Nani?');
       yield Lint(
         code: 'riverpod_final_provider',
         message: 'Providers should always be declared as final',
