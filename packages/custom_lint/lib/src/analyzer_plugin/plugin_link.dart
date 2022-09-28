@@ -28,7 +28,6 @@ final _pluginLinkProvider = FutureProvider.autoDispose
     p.join(pluginRootPath, 'bin', 'custom_lint.dart'),
   );
 
-  print('pc $packageConfig main: $mainUri');
   final isolate = await Isolate.spawnUri(
     mainUri,
     const [],
@@ -167,7 +166,6 @@ final pluginMetasForContextRootProvider = Provider.autoDispose
         ref
             .read(packageConfigForPluginProvider(dependencyMeta.root).notifier)
             .state = packageConfigFile.uri;
-        print('pc ${packageConfigFile.uri} main: ${dependencyMeta.root}');
         yield dependencyMeta;
         // TODO assert that they have the necessary configs
       }
