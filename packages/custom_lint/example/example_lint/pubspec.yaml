@@ -15,7 +15,4 @@ dependencies:
 
 dependency_overrides:
   custom_lint:
-    git: 
-      url: git@github.com:TimWhiting/dart_custom_lint
-      path: packages/custom_lint
-      ref: git_dependency_fix
+    path: ../../

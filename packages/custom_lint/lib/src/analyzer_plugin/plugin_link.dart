@@ -21,26 +21,20 @@ final _pluginLinkProvider = FutureProvider.autoDispose
 
   final pluginRootPath = pluginRootUri.toFilePath();
 
-  // TODO configure that through build.yaml-like file
+  final packageConfig =
+      ref.watch(packageConfigForPluginProvider(pluginRootUri));
+
   final mainUri = Uri.file(
     p.join(pluginRootPath, 'bin', 'custom_lint.dart'),
   );
 
-  var packageConfigPath =
-      p.join(pluginRootPath, '.dart_tool', 'package_config.json');
-  if (!File(packageConfigPath).existsSync()) {
-    // Fall back to the packageConfig of the package depending on the custom lint (fixes the git dependency problem)
-    // Requires that all the dependencies of the custom lint are at least dev_dependencies of the package depending on it,
-    // which should be the case unless the custom lint is using a dev_dependency in its code that should be a regular dependency
-    packageConfigPath = p.join('.dart_tool', 'package_config.json');
-  }
-
+  print('pc $packageConfig main: $mainUri');
   final isolate = await Isolate.spawnUri(
     mainUri,
     const [],
     receivePort.sendPort,
 
-    packageConfig: Uri.file(packageConfigPath),
+    packageConfig: packageConfig ?? mainUri,
     // TODO test error in main (outside of runZonedGuarded)
     debugName: pluginName,
     onError: receivePort.sendPort,
@@ -117,6 +111,11 @@ final pluginMetaProvider =
       .firstWhere((element) => element.root == linkKey);
 });
 
+final packageConfigForPluginProvider =
+    StateProvider.family<Uri?, Uri>((ref, uri) {
+  return null;
+});
+
 /// The list of plugins associated with a context root.
 final pluginMetasForContextRootProvider = Provider.autoDispose
     .family<List<Package>, plugin.ContextRoot>((ref, contextRoot) {
@@ -165,6 +164,10 @@ final pluginMetasForContextRootProvider = Provider.autoDispose
 
 // TODO extract magic value
       if (dependencyPubspec.hasDependency('custom_lint_builder')) {
+        ref
+            .read(packageConfigForPluginProvider(dependencyMeta.root).notifier)
+            .state = packageConfigFile.uri;
+        print('pc ${packageConfigFile.uri} main: ${dependencyMeta.root}');
         yield dependencyMeta;
         // TODO assert that they have the necessary configs
       }
